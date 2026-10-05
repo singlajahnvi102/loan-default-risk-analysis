@@ -1,5 +1,5 @@
 
-
+Create Database berka_financial;
 USE berka_financial;
 drop table account;
 CREATE TABLE account (
