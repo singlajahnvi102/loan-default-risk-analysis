@@ -8,19 +8,19 @@ simply take a dataset and make a dashboard.
 I asked Claude (Anthropic's AI assistant) to act as both my client and
 my senior analyst/expert.
 
-Claude as my client
+***Claude as my client***
 
 I gave Claude this prompt:
 
-"Act as a client from the finance industry. I am a data analyst. Bring
+***"Act as a client from the finance industry. I am a data analyst. Bring
 me one realistic business problem your company is facing that I could
 solve using data analysis. Explain the problem the way a real
-stakeholder would. Then let me ask you questions about it.
+stakeholder would. Then let me ask you questions about it.***
 
-I am thinking about making a project using SQL, Power BI. So, suggest
+***I am thinking about making a project using SQL, Power BI. So, suggest
 accordingly. Also give me a dataset from the internet (with link to
 it) that can be related to this problem, and I can start working on
-your needs."
+your needs."***
 
 Claude then acted as Rohan, VP of Collections & Risk, and gave me
 the business problem, business objectives and analytical questions.
@@ -31,9 +31,9 @@ I then gave Claude this prompt:
 
 "Paste your column names or attach the files.
 
-You are the data expert from the company. Now explain each column in
+***You are the data expert from the company. Now explain each column in
 business terms, flag anything unusual. Whatever I need to know before
-I start working."
+I start working."***
 
 This helped me understand the business meaning of the tables and columns
 before starting the analysis.
