@@ -1,24 +1,23 @@
-📌 How I Started This Project
+🎯 How I Started the Project
 
-I wanted to build this project like a real Data Analyst assignment,
-rather than simply downloading a dataset and creating a dashboard.
+I wanted to build this as a realistic Data Analyst assignment,
+rather than simply download a dataset and create a dashboard.
 
-So I used AI deliberately to simulate a real workplace environment.
+I therefore used Claude as a simulated client and data expert.
 
-I asked Claude to act as my client first, and then as the data
-expert / senior analyst who could help me understand the business
-context and review my reasoning.
+The workflow was:
 
-This gave me a realistic workflow:
-
-Business Problem → Data Understanding → SQL Investigation → Validation
-→ Power BI Model → DAX → Dashboard → Recommendations
+Stakeholder Problem → Data Understanding → SQL Investigation →
+Validation → SQL Views → Power BI Model → DAX → Dashboard → Business
+Recommendations
 
 🤝 AI-Assisted Project Setup
 
 1. Claude as My Client
 
-I gave Claude this exact prompt:
+I first asked Claude to act as a finance-industry stakeholder.
+
+Exact prompt I used
 
 “Act as a client from the finance industry . I am a data analyst.
 Bring me one realistic business problem your company is facing that I
@@ -29,7 +28,7 @@ accordingly. Also give me a dataset from the internet (with link to
 it) that can be related to this problem, and I can start working on
 your needs.”
 
-Claude then acted as Rohan, VP of Collections & Risk, and provided
+Claude then acted as Rohan, VP of Collections & Risk, and gave me
 the business problem, stakeholder expectations and analytical questions.
 
 2. Claude as My Data Expert
@@ -41,13 +40,16 @@ You are the data expert from the company. Now explain each column in
 business terms, flag anything unusual. Whatever I need to know before
 I start working.”
 
-This helped me understand the tables, relationships, business meaning of
-columns and potential data-quality issues before starting the analysis.
+This helped me understand the business meaning of the tables and
+columns, relationships between tables, and potential data-quality
+issues before beginning the analysis.
 
-📁 Supporting documentation: - Business Problem
-Brief - Data Dictionary
-— Business Terms &
-Watch-Outs
+📄 Supporting documentation: - Business Problem
+Brief -
+Data Dictionary — Business
+Terms -
+Documentation
+Folder
 
 🎯 Business Problem
 
@@ -60,461 +62,49 @@ team can flag at-risk accounts earlier. I need this backed by data,
 not gut feeling — and I want a dashboard my team can check regularly,
 not a one-time report.”
 
-Business objective
+What the stakeholder wanted to know
 
-Use loan, account, client, district and transaction data to answer:
+The analysis was designed to answer:
 
-Which borrower and loan segments show higher observed default
+Which loan and borrower segments have higher observed default
 rates?
 
-Which account characteristics are associated with higher default
-rates?
+Which districts show higher observed risk?
 
-What account behaviour was visible before loan issuance?
+Do loan amount and loan duration relate to default rate?
 
-Does the historical data actually support the stakeholder’s claim
-that default risk increased?
-
-What should the risk and collections teams investigate further?
-
-🗂️ Dataset
-
-This project uses the Berka Financial Dataset (1993–1998) from the
-CTU Relational Learning Repository.
-
-The dataset contains banking information across tables such as:
-
-loan
-
-account
-
-client
-
-district
-
-disp
-
-card
-
-trans
-
-order
-
-🔗 Dataset: CTU Relational Financial
-Dataset
-
-Loan outcome definition
-
-The original dataset documentation defines:
-
-Original Status
-
-Interpretation in this project
-
-A
-
-Non-default
-
-C
-
-Non-default
-
-B
-
-Default
-
-D
-
-Default
-
-Therefore, the project classifies B + D as defaulted and A + C as
-non-defaulted.
-
-Important: The dataset documentation also discusses a
-min(trans.balance) rule that can perfectly separate some loan
-outcomes. I did not use minimum transaction balance to define
-defaults or as a predictive feature. This project is a
-descriptive/historical analysis, not a machine-learning prediction
-model.
-
-🚧 A Major Technical Challenge — 1 Million+ Transactions
-
-One of the hardest parts of this project was working with the trans
-table, which contains approximately 1.06 million transaction
-records.
-
-I tried several approaches before finding a reliable solution:
-
-❌ Attempt 1 — MySQL Workbench export
-
-The GUI export was extremely slow and unreliable at this scale.
-
-❌ Attempt 2 — INTO OUTFILE
-
-The public guest account did not have the required file-write
-privileges.
-
-❌ Attempt 3 — One large Python query
-
-The remote server lost the connection while retrieving the full dataset
-in one request.
-
-✅ Final solution — Batch export
-
-I used Python + pandas and exported the data in 20,000-row
-batches.
-
-This successfully produced approximately 1.06 million transaction
-records.
-
-📄 Full troubleshooting notes:
-EXPORT_NOTES.pdf
-
-💡 What I learned
-
-Real-world data analysis is not only about writing the correct SQL
-query. Data access, permissions, connection stability and data
-volume also matter.
-
-🧹 Data Understanding & Validation
-
-Before analysing the data, I checked the relationships between the main
-tables.
-
-Important data issues I handled
-
-disp can contain both OWNER and DISPONENT relationships, so
-careless joins can duplicate loan records.
-
-Client age was calculated at the loan issue date, rather than
-using a single static age.
-
-Ages outside the intended adult analysis range were handled
-separately.
-
-Districts with very small loan volumes were treated cautiously.
-
-The 1998 default rate was interpreted carefully because later loans
-have less time to become observed defaults.
-
-Pre-loan behavioural analysis used transactions occurring before the
-loan issue date, avoiding post-loan activity in those measures.
-
-🔍 SQL Analysis
-
-MySQL was used as the main investigation layer.
-
-I analysed:
-
-Area
-
-Business Question
-
-Overall default
-
-What is the portfolio default rate?
-
-District
-
-Which districts show higher observed default rates?
-
-Economic conditions
-
-Do unemployment and salary vary with district default rates?
-
-Loan duration
-
-Are short-, medium- or long-term loans riskier?
-
-Loan amount
-
-Does loan size relate to default rate?
-
-Amount + duration
-
-Which combinations show higher observed risk?
-
-Pre-loan balance
-
-Did future defaulters have lower balances before borrowing?
-
-Outgoing activity
-
-Did future defaulters show different pre-loan activity?
-
-Account age
+Do account characteristics and pre-loan behaviour differ between
+defaulted and non-defaulted loans?
 
 Are newer accounts riskier?
 
-Client age
+Does card ownership show an association with default rate?
 
-Does age show a meaningful default pattern?
+Do age or gender show a meaningful pattern?
 
-Gender
+Has default rate actually increased over time?
 
-Is there a meaningful difference?
+🧪 Project Hypothesis
 
-Card status
+The stakeholder gave me an initial hypothesis:
 
-Does card ownership correlate with default rate?
+“Our NPA (default) rate has risen from 3.2% to 5.8% over 18
+months.”
 
-Time
+This created an important analytical question:
 
-Did default rates change over the historical period?
+Does the historical data support the stakeholder’s assumption?
 
-📁 View all SQL analysis
+Instead of assuming the statement was true, I tested it using the loan
+issue date.
 
-🧩 SQL Views Built for Power BI
-
-I created two SQL views specifically to connect the transaction-level
-investigation with the Power BI dashboard.
-
-vw_pre_loan_transactions
-
-Links each loan to transactions that occurred before the loan issue
-date.
-
-Used for:
-
-Average Pre-Loan Balance
-
-vw_pre_loan_outgoing_activity
-
-Summarises outgoing transaction activity before loan issuance at the
-loan level.
-
-Used for:
-
-Average Pre-Loan Outgoing Transactions
-
-Average Total Pre-Loan Outgoing Amount
-
-📁 View SQL views
-
-📊 Power BI Dashboard
-
-The final Power BI report contains two pages, each answering a
-different part of the business problem.
-
-Page 1 — Default Risk Overview
-
-Focus:
-
-Total Loans
-
-Total Defaulted Loans
-
-Overall Default Rate
-
-Default Rate by District
-
-Default Rate by Year
-
-Default Rate by Account Age
-
-Loan Amount + Duration segmentation
-
-🖼️ Dashboard Preview
-
-<figure>
-<img src="Dashboard_Pages/Default_Risk_Overview.png"
-alt="Default Risk Overview" />
-<figcaption aria-hidden="true">Default Risk Overview</figcaption>
-</figure>
-
-Page 2 — Early Warning Signals
-
-Focus:
-
-Average Pre-Loan Balance
-
-Pre-Loan Outgoing Activity
-
-Client Age
-
-Card Status
-
-🖼️ Dashboard Preview
-
-<figure>
-<img src="Dashboard_Pages/Early_Warning_Signals.png"
-alt="Early Warning Signals" />
-<figcaption aria-hidden="true">Early Warning Signals</figcaption>
-</figure>
-
-Note: The dashboard screenshots are stored in Dashboard_Pages/
-so the report can be reviewed directly from GitHub without opening
-Power BI.
-
-📁 Open Dashboard Pages
-📁 Open Power BI File
-
-📈 Key Findings
-
-1. Loan amount showed the strongest observed difference
-
-Loan Amount
-
-Loans
-
-Default Rate
-
-Small
-
-497
-
-8.25%
-
-Mid
-
-159
-
-17.61%
-
-Big
-
-26
-
-26.92%
-
-Default rates increased from the small to large loan groups.
-
-However, the big-loan group contains only 26 loans, so this finding
-should be validated using a larger and more recent portfolio.
-
-2. Future defaulters had lower pre-loan balances
-
-Default Status
-
-Average Pre-Loan Balance
-
-Non-defaulted
-
-45.2K
-
-Defaulted
-
-38.6K
-
-Accounts that later defaulted showed lower balances before the loan
-was issued, suggesting lower pre-loan financial buffers.
-
-This is an association, not proof that lower balance causes default.
-
-3. Future defaulters showed lower outgoing activity
-
-My initial expectation was that future defaulters might show higher
-outgoing or withdrawal activity before taking the loan.
-
-The data showed the opposite:
-
-Metric
-
-Non-Defaulted
-
-Defaulted
-
-Average outgoing transactions
-
-46.96
-
-37.45
-
-Average total outgoing amount
-
-318.4K
-
-289.8K
-
-So the data did not support the original assumption of higher
-pre-loan outgoing activity.
-
-4. Newer accounts showed higher observed default rates
-
-Account Age
-
-Default Rate
-
-3–9 months
-
-13.62%
-
-10–15 months
-
-11.29%
-
-16–22 months
-
-8.60%
-
-Newer accounts showed higher observed default rates than older accounts.
-
-This could justify further investigation into whether limited account
-history is associated with higher risk.
-
-5. Card ownership showed a strong association
-
-Card Status
-
-Default Rate
-
-Without Card
-
-13.87%
-
-With Card
-
-2.94%
-
-Accounts without a card had a much higher observed default rate.
-
-I did not interpret this as proof that having a card reduces default
-risk. Card ownership may reflect an existing or more established
-banking relationship or other characteristics associated with lower
-risk.
-
-6. District risk was uneven
-
-Several districts showed higher historical default rates, including:
-
-Opava
-
-Kutna Hora
-
-Chrudim
-
-Because some districts had small loan counts, I used a minimum-volume
-threshold when highlighting district risk.
-
-7. Age and gender did not show meaningful differences
-
-The adult age groups were broadly similar:
-
-Young: ~11.7%
-
-Middle: ~10.9%
-
-Older: ~11.5%
-
-Gender was also investigated but did not show a meaningful difference in
-observed default rates.
-
-Therefore, neither age nor gender was treated as a major risk driver in
-the final dashboard.
-
-⚠️ Stakeholder Hypothesis vs. What the Data Actually Showed
-
-The business scenario started with the statement:
-
-Default rate increased from 3.2% to 5.8% over 18 months.
-
-But the historical dataset did not reproduce a sustained increase.
+The historical data did not reproduce a sustained increase.
 
 Observed annual default rates were approximately:
 
 Year
 
-Default Rate
+Observed Default Rate
 
 1993
 
@@ -540,31 +130,581 @@ Default Rate
 
 2.53%
 
-The sharp decline in 1998 should be interpreted cautiously because later
-loans have less time to become observed defaults (right-censoring).
+The sharp decline in 1998 was treated cautiously because later loans
+have less time to become observed defaults (right-censoring).
 
-🎯 What I did instead
+What this changed in my analysis
 
-I treated the 3.2% → 5.8% statement as the stakeholder’s business
-hypothesis, rather than forcing the historical data to confirm it.
+I did not try to force the dashboard to prove that default risk was
+increasing.
 
-The more useful conclusion was:
+Instead, I shifted the investigation toward:
+
+Where is observed default risk concentrated, and what
+borrower/account characteristics are associated with it?
+
+That became the central analytical story of the project.
+
+🗂️ Dataset
+
+This project uses the Berka Financial Dataset (1993–1998) from the
+CTU Relational Learning Repository.
+
+The dataset contains banking information across tables including:
+
+loan
+
+account
+
+client
+
+district
+
+disp
+
+card
+
+trans
+
+order
+
+🌐 Original Dataset — CTU Relational Learning
+Repository
+
+⚠️ Loan Default Definition
+
+The original dataset documentation defines loan outcomes using the
+original loan.status values.
+
+For this project:
+
+Original Status
+
+Project Classification
+
+A
+
+Non-default
+
+C
+
+Non-default
+
+B
+
+Default
+
+D
+
+Default
+
+Therefore:
+
+Defaulted = B + D
+Non-defaulted = A + C
+
+Important dataset note
+
+The dataset documentation also discusses a minimum transaction
+balance rule that can perfectly separate some loan outcomes.
+
+I did not use minimum transaction balance to define
+default/non-default, and I did not build a machine-learning prediction
+model around it.
+
+This project is a historical descriptive analysis, not a predictive
+credit-scoring model.
+
+🚧 Major Technical Challenge — 1 Million+ Transactions
+
+One of the most challenging parts of this project was the trans table,
+which contains approximately 1.06 million transaction records.
+
+I tried several approaches:
+
+❌ MySQL Workbench Export
+
+The GUI export was extremely slow and unreliable for the full
+dataset.
+
+❌ INTO OUTFILE
+
+The public guest account did not have the required file-write
+privileges.
+
+❌ One Large Python Query
+
+The remote server lost the connection while retrieving the full
+table in one request.
+
+✅ Final Solution — Batched Python Export
+
+I used Python + pandas and retrieved the data in 20,000-row
+batches.
+
+This successfully exported approximately 1.06 million transaction
+records.
+
+📄 Read the complete export troubleshooting
+notes
+
+What I learned
+
+Real-world data analysis is not only about writing the correct SQL.
+Data volume, permissions, connection stability and the data-access
+environment also matter.
+
+🧹 Data Understanding & Validation
+
+Before starting the analysis, I worked through the relationships between
+the main banking tables.
+
+Important issues I identified
+
+disp can contain both OWNER and DISPONENT relationships, so
+careless joins can duplicate loan records.
+
+Client age was calculated at the loan issue date, rather than
+treating age as a permanent customer attribute.
+
+Ages outside the intended adult analysis range were handled
+separately.
+
+Districts with very small loan volumes were treated cautiously.
+
+The 1998 decline was interpreted carefully because of
+right-censoring.
+
+Pre-loan behavioural analysis used transactions occurring before the
+loan issue date.
+
+📄 View the Data
+Dictionary
+
+🔍 SQL Investigation
+
+I used MySQL as the main investigation layer.
+
+The analysis covered:
+
+Analysis Area
+
+Business Question
+
+Overall default
+
+What is the overall portfolio default rate?
+
+District
+
+Which districts show higher observed default rates?
+
+Economic conditions
+
+Do unemployment and salary vary with district default rates?
+
+Loan duration
+
+Are short-, medium- or long-term loans riskier?
+
+Loan amount
+
+Does loan size relate to default rate?
+
+Amount + duration
+
+Which loan-size/duration combinations show higher observed risk?
+
+Pre-loan balance
+
+Did future defaulters have lower balances before borrowing?
+
+Outgoing activity
+
+Did future defaulters show different activity before loan issuance?
+
+Account age
+
+Are newer accounts riskier?
+
+Client age
+
+Does age show a meaningful default pattern?
+
+Gender
+
+Is there a meaningful difference?
+
+Card status
+
+Does card ownership correlate with default rate?
+
+Time trends
+
+Did default rates change over the historical period?
+
+📁 Open the SQL
+Files
+
+🧩 Why I Created SQL Views
+
+A major part of the project was connecting the SQL investigation to
+the Power BI dashboard.
+
+Instead of importing raw transaction-level data directly into Power BI
+for every analysis, I created dedicated SQL views for the behavioural
+analysis.
+
+This gave me a cleaner and more controlled analytical layer.
+
+vw_pre_loan_transactions
+
+This view connects each loan with transactions that occurred before
+the loan issue date.
+
+Why?
+
+I wanted to answer:
+
+Did accounts that later default have lower balances before taking
+the loan?
+
+The view supports the Power BI calculation:
+
+Average Pre-Loan Balance
+
+vw_pre_loan_outgoing_activity
+
+This view summarises outgoing transaction activity before loan
+issuance at the loan level.
+
+Why?
+
+I wanted to test the stakeholder-style question:
+
+Did future defaulters show more outgoing activity before the loan
+went bad?
+
+The SQL analysis actually showed the opposite — future defaulters had
+lower outgoing activity.
+
+The view supports:
+
+Average Pre-Loan Outgoing Transactions
+
+Average Total Pre-Loan Outgoing Amount
+
+Why this approach was useful
+
+The SQL views created a clear bridge between:
+
+Raw transaction data → business-level metrics → Power BI visuals
+
+They also ensured that the Power BI calculations were based on the
+correct pre-loan time window rather than mixing pre-loan and
+post-loan activity.
+
+📁 Open SQL Views and
+Analysis
+
+📊 Power BI Dashboard
+
+I used Power BI as the presentation and interactive analysis layer.
+
+The dashboard is divided into two pages, because each page answers a
+different part of the business problem.
+
+📄 Page 1 — Default Risk Overview
+
+Purpose
+
+The first page answers:
+
+Where is observed default risk concentrated across the loan
+portfolio?
+
+It contains:
+
+Total Loans
+
+Total Defaulted Loans
+
+Overall Default Rate
+
+Default Rate by District
+
+Default Rate by Year
+
+Default Rate by Account Age
+
+Default Rate by Loan Amount + Duration
+
+🖼️ Dashboard Preview
+
+<figure>
+<img
+src="https://raw.githubusercontent.com/singlajahnvi102/loan-default-risk-analysis/main/Dashboard_Pages/Overview.png"
+alt="Default Risk Overview" />
+<figcaption aria-hidden="true">Default Risk Overview</figcaption>
+</figure>
+
+🔗 Open Page 1 —
+Overview.png
+
+📄 Page 2 — Early Warning Signals
+
+Purpose
+
+The second page focuses on:
+
+What borrower/account characteristics and pre-loan behaviours were
+associated with future defaults?
+
+It contains:
+
+Average Pre-Loan Balance
+
+Pre-Loan Outgoing Activity
+
+Client Age Group
+
+Card Status
+
+🖼️ Dashboard Preview
+
+<figure>
+<img
+src="https://raw.githubusercontent.com/singlajahnvi102/loan-default-risk-analysis/main/Dashboard_Pages/Earning_Warning_signal.png"
+alt="Early Warning Signals" />
+<figcaption aria-hidden="true">Early Warning Signals</figcaption>
+</figure>
+
+🔗 Open Page 2 —
+Earning_Warning_signal.png
+
+Note: The file name above follows the exact name currently used in
+the GitHub repository.
+
+📊 Power BI File
+
+Open / download the Power BI PBIX
+file
+
+📈 Key Findings
+
+1️⃣ Loan Amount Showed the Strongest Observed Difference
+
+Loan Amount Band
+
+Loans
+
+Default Rate
+
+Small
+
+497
+
+8.25%
+
+Mid
+
+159
+
+17.61%
+
+Big
+
+26
+
+26.92%
+
+There was a clear increase in observed default rate as loan size
+increased.
+
+However, the Big-loan group contains only 26 loans, so this should
+be validated on a larger and more recent portfolio before changing
+lending policy.
+
+2️⃣ Future Defaulters Had Lower Pre-Loan Balances
+
+Default Status
+
+Average Pre-Loan Balance
+
+Non-defaulted
+
+45.2K
+
+Defaulted
+
+38.6K
+
+Accounts that later defaulted showed lower balances before the loan
+was issued.
+
+This may indicate lower financial buffers, but it is an association
+and not proof that lower balances cause default.
+
+3️⃣ Future Defaulters Showed Lower Outgoing Activity
+
+My initial expectation was that customers who later defaulted might show
+higher outgoing or withdrawal activity before taking the loan.
+
+The data showed the opposite.
+
+Metric
+
+Non-Defaulted
+
+Defaulted
+
+Average outgoing transactions
+
+46.96
+
+37.45
+
+Average total outgoing amount
+
+318.4K
+
+289.8K
+
+This was an important analytical lesson:
+
+The data did not support my initial assumption.
+
+Future defaulters showed lower outgoing transaction activity and lower
+total outgoing amounts before loan issuance.
+
+4️⃣ Newer Accounts Showed Higher Observed Default Rates
+
+Account Age
+
+Default Rate
+
+3–9 months
+
+13.62%
+
+10–15 months
+
+11.29%
+
+16–22 months
+
+8.60%
+
+Newer accounts showed higher observed default rates than older accounts.
+
+This suggests that limited account history may deserve further
+investigation.
+
+5️⃣ Card Ownership Showed a Strong Association
+
+Card Status
+
+Default Rate
+
+Without Card
+
+13.87%
+
+With Card
+
+2.94%
+
+Accounts without a card had a much higher observed default rate.
+
+I did not conclude that having a card causes lower default risk.
+
+A more cautious interpretation is that card ownership may reflect an
+existing or more established banking relationship or other
+characteristics associated with lower risk.
+
+6️⃣ District Risk Was Uneven
+
+Several districts showed substantially higher historical default rates,
+including:
+
+Opava
+
+Kutna Hora
+
+Chrudim
+
+Because some districts had small loan counts, I used a minimum-volume
+threshold when highlighting district-level risk.
+
+This reduces the chance of overreacting to a very small number of loans.
+
+7️⃣ Client Age Showed Little Difference
+
+The valid adult age groups were broadly similar:
+
+Young: ~11.7%
+
+Middle: ~10.9%
+
+Older: ~11.5%
+
+The differences were small relative to the overall portfolio.
+
+Therefore, age was not treated as a major risk driver in the final
+dashboard.
+
+8️⃣ Gender Showed No Meaningful Difference
+
+Gender was investigated but did not show a meaningful difference in
+observed default rates.
+
+Therefore, I removed gender from the main dashboard story rather
+than adding a visual that did not provide a useful business insight.
+
+The SQL analysis is still documented in the repository.
+
+⚖️ Stakeholder Hypothesis vs. Analysis
+
+This is one of the most important parts of the project.
+
+Stakeholder’s starting assumption
+
+“Default rate has increased from 3.2% to 5.8%.”
+
+What the historical data showed
+
+The dataset did not reproduce a sustained increase.
+
+Instead, the analysis showed that:
 
 Portfolio-level default trends can look stable or declining while
 individual segments still show substantially higher observed default
 rates.
 
-That changed the direction of the analysis from “prove default rates
-are increasing” to “identify where observed risk is concentrated.”
+Why this matters
+
+A Data Analyst should not change the analysis simply because the
+stakeholder expects a particular result.
+
+My approach was:
+
+Hypothesis → Test → Validate → Communicate the actual evidence
+
+This is why the project ultimately focused more on risk concentration
+and borrower/account characteristics than on proving an overall upward
+trend.
 
 💡 Business Recommendations
 
+Based on the analysis, I would recommend that the risk/collections team:
+
 1. Review larger loan applications more carefully
 
-Large loans showed higher observed default rates.
+Large loans showed the highest observed default rate, although the
+sample is small.
 
-Because the sample is small, this should be validated with a larger and
-more recent portfolio before changing lending policy.
+This should be validated on a larger portfolio before changing lending
+policy.
 
 2. Pay closer attention to newer accounts
 
@@ -575,24 +715,23 @@ to additional verification or monitoring.
 
 3. Explore pre-loan balance as a potential early-warning signal
 
-Lower pre-loan balances were associated with accounts that later
-defaulted.
+Future defaulters showed lower pre-loan balances.
 
-This could be investigated further in a future risk-monitoring
+This could be investigated further as part of a future risk-monitoring
 framework.
 
 4. Investigate lower financial activity
 
-The analysis did not support the initial assumption that future
+The data did not support the initial assumption that future
 defaulters simply withdrew more money.
 
 Instead, they showed lower outgoing activity and lower balances.
 
 This combination deserves further investigation.
 
-5. Investigate high-risk districts with sufficient volume
+5. Review high-risk districts carefully
 
-District differences should be reviewed alongside:
+District-level differences should be reviewed alongside:
 
 loan volume
 
@@ -602,19 +741,24 @@ customer mix
 
 branch-level lending practices
 
-6. Do not overemphasize age or gender
+6. Avoid overemphasizing age and gender
 
 Neither age nor gender showed strong or consistent differences in
-observed default rates in this analysis.
+observed default rates.
 
-7. Validate the findings on newer data
+7. Validate findings on newer data
 
-The dataset is historical. Before applying any finding operationally, it
-should be tested on a larger and more recent portfolio.
+The dataset is historical.
 
-🛠️ DAX & Power BI Logic
+Before applying any finding operationally, the patterns should be tested
+on larger, newer and more representative portfolio data.
 
-I created measures and calculated columns including:
+🧮 Power BI & DAX
+
+Power BI was used for interactive analysis, modelling and business
+communication.
+
+I created DAX measures and calculated columns including:
 
 Total Loans
 
@@ -640,8 +784,32 @@ Loan Amount Band
 
 Loan Duration Category
 
+Account Age Group
+
 📁 View DAX Measures & Calculated
 Columns
+
+🧱 Data Model / Schema
+
+The project uses the loan table as the central loan-level analytical
+table, with related account, client, district, card and transaction
+information.
+
+The model was designed so that:
+
+Loan-level analysis remains at the correct grain
+
+Transaction-level information is used only where appropriate
+
+OWNER relationships are handled carefully
+
+Pre-loan SQL views connect back to the relevant loan
+
+Power BI measures can analyse the data without unnecessarily
+duplicating loan records
+
+🖼️ View the Data Model /
+Schema
 
 🧠 Responsible Use of AI
 
@@ -656,9 +824,11 @@ Creating the initial business problem
 
 Explaining the dataset and business meaning of columns
 
+Identifying potential data-quality issues
+
 Challenging my assumptions
 
-Reviewing analytical reasoning
+Reviewing my analytical reasoning
 
 Explaining technical concepts
 
@@ -682,118 +852,61 @@ Interpretation of findings
 
 Business recommendations
 
-My goal was to use AI to learn faster, simulate a real workplace
-environment and improve my reasoning — not to outsource the project.
+I used AI to learn faster, simulate a real workplace environment and
+improve my reasoning — not to outsource the project.
 
-The exact prompts I used are included above so the AI-assisted workflow
-is transparent.
+The exact prompts are included in this README so the workflow is
+transparent and reproducible.
 
-📁 Project Structure
+📁 Project Resources
 
-loan-default-risk-analysis/
-│
-├── Dashboard/
-│   └── Berka_finance_project.pbix
-│
-├── Dashboard_Pages/
-│   ├── Default_Risk_Overview.png
-│   └── Early_Warning_Signals.png
-│
-├── Documentation/
-│   ├── Loan_Default_Analysis_Brief.pdf
-│   ├── Data_Dictionary_Business_Terms.pdf
-│   └── EXPORT_NOTES.pdf
-│
-├── Measures/
-│   └── DAX_Measures_and_Columns.md
-│
-├── Schema/
-│   └── Schema.png
-│
-├── Sql_Files/
-│   ├── Q1_Overall_Default_Rate.sql
-│   ├── Q2_Default_by_District.sql
-│   ├── Q3_Unemployment_Salary_vs_Default.sql
-│   ├── Q4_Default_by_Loan_Duration.sql
-│   ├── Q5_Default_by_Loan_Amount.sql
-│   ├── Q6_Default_by_Duration_and_Amount.sql
-│   ├── Q7_Default_by_Balance.sql
-│   ├── Q8_Default_by_Outgoing_Activity.sql
-│   ├── Q9_Default_by_Account_Age.sql
-│   ├── Q10_Default_by_Client_Age.sql
-│   ├── Q11_Default_by_Gender.sql
-│   ├── Q12_Default_by_Card_Status.sql
-│   ├── Q13_Default_by_Time_Period.sql
-│   ├── Table_Structure_and_Loading.sql
-│   ├── vw_pre_loan_transactions.sql
-│   └── vw_pre_loan_outgoing_activity.sql
-│
-├── dataset/
-│
-└── README.md
+📊 Dashboard
 
-🔧 Tools Used
+Power BI PBIX
+File
 
-Tool
+Dashboard —
+Overview
 
-Purpose
+Dashboard — Early Warning
+Signals
 
-MySQL
+Dashboard Pages
+Folder
 
-SQL investigation and analysis
+🧮 Analysis & Technical Files
 
-Power BI
+SQL
+Files
 
-Data modelling, interactive analysis and dashboard
+DAX Measures &
+Columns
 
-DAX
+Data Model /
+Schema
 
-Measures and calculated columns
+📚 Documentation
 
-Power Query
-
-Data cleaning and transformation
-
-Python / pandas
-
-Large transaction-data export
-
-GitHub
-
-Version control and project documentation
-
-Claude
-
-Stakeholder simulation, learning and analytical review
-
-📚 Project Resources
-
-📊 Power BI Dashboard
-
-🖼️ Dashboard Screenshots
-
-🧮 DAX Measures & Columns
-
-🗃️ SQL Analysis
-
-🧱 Data Model / Schema
-
-📖 Business Problem
+Business Problem
 Brief
 
-📘 Data Dictionary
+Data Dictionary — Business
+Terms
 
-🚧 Large Data Export Notes
+Documentation
+Folder
 
-🌐 Original Dataset — CTU Relational Learning
-Repository
+🌐 Dataset
+
+Original Berka Financial Dataset —
+CTU
 
 ⚠️ Limitations
 
 This project should be interpreted as a historical analytical study,
 not as a production credit-risk model.
 
-Key limitations include:
+Important limitations include:
 
 Historical data from 1993–1998
 
@@ -810,7 +923,7 @@ Some segment differences require validation on larger samples
 The findings should not automatically become lending or collections
 rules
 
-The results are analytical signals and hypotheses for further
+These findings are analytical signals and hypotheses for further
 investigation — not automatic credit decisions.
 
 🎓 What I Learned
@@ -819,29 +932,31 @@ This project taught me much more than SQL syntax or Power BI formatting.
 
 I learned how to:
 
-Start with a business question, not a chart.
+Start with a business question, not a chart
 
-Understand a relational dataset before analysing it.
+Understand a relational dataset before analysing it
 
-Think carefully about grain and joins.
+Think carefully about table grain and joins
 
-Avoid duplicate records caused by relationship tables.
+Avoid duplicate records caused by relationship tables
 
-Work with 1M+ transaction records.
+Work with 1M+ transaction records
 
-Build SQL views specifically for analytical reporting.
+Build SQL views for a specific analytical purpose
 
-Connect SQL investigation to a Power BI data model.
+Connect SQL investigation to a Power BI model
 
-Use DAX for business measures and categories.
+Use DAX for business measures and categories
 
-Question stakeholder assumptions instead of blindly confirming them.
+Question stakeholder assumptions
 
-Distinguish association from causation.
+Distinguish association from causation
 
-Communicate limitations honestly.
+Communicate limitations honestly
 
-⭐ Final takeaway
+Turn analytical findings into business recommendations
+
+⭐ Final Takeaway
 
 Good data analysis is not about proving what someone expects to be
 true. It is about investigating the evidence, communicating what the
