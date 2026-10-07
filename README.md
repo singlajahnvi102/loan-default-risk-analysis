@@ -13,7 +13,7 @@ Recommendations***
 
 ## 🤝 AI-Assisted Project Setup
 
-###1. Claude as My Client
+### 1. Claude as My Client
 
 I first asked **Claude to act as a finance-industry stakeholder**.
 
