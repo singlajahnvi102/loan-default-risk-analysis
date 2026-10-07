@@ -593,37 +593,6 @@ The model was designed so that:
 - Pre-loan SQL views connect back to the relevant loan
 - Power BI measures can analyse the data without unnecessarily duplicating loan records
 
-📊 **View the Data Model / Schema**
-
-
-## 🤖 Responsible Use of AI
-
-AI was used as a learning, business-simulation and review tool, not as a replacement for my analytical work.
-
-Claude helped me with:
-
-- Simulating a realistic finance stakeholder
-- Creating the initial business problem
-- Explaining the business context
-- Reviewing the analysis and reasoning
-- Challenging assumptions and interpretations
-
-My own work included:
-
-- SQL writing and debugging
-- Data validation
-- Analytical decisions
-- Power BI data modelling
-- DAX measures
-- Calculated columns
-- Dashboard design
-- Interpretation of findings
-- Business recommendations
-
-I used AI to learn faster, simulate a real workplace environment and improve my reasoning — not to outsource the project.
-
-The exact prompts are included in this README so the workflow is transparent and reproducible.
-
 ## ⚠️ Limitations
 
 This project should be interpreted as a historical analytical study, not as a production credit-risk model.
@@ -636,7 +605,6 @@ Important limitations include:
 - Some district-level differences may be influenced by loan volume
 - Observed relationships do not prove causation
 - Findings should be validated on newer and larger portfolio data
-- The analysis does not build a predictive credit-risk model
 
 The stakeholder's reported increase in NPA rate was treated as the business context and hypothesis. The historical dataset did not independently reproduce that exact trend, so I did not force the analysis to support the original assumption.
 
@@ -671,21 +639,6 @@ My own work included:
 I used AI to learn faster, simulate a real workplace environment and improve my reasoning — not to outsource the project.
 
 The exact prompts used during the project are included in this README so that the workflow is transparent and reproducible.
-
-
-## 📁 Project Resources
-
-The repository contains:
-
-- SQL analysis files
-- Power BI dashboard
-- DAX measures and calculated columns
-- Data model / schema
-- Dashboard screenshots
-- Business documentation
-- Data dictionary
-- Export notes
-- Dataset information
 
 
 ## 🎯 Final Takeaway
