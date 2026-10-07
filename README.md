@@ -48,7 +48,7 @@ columns, relationships between tables, and potential data-quality
 issues** before beginning the analysis.
 📘 **[View the Data Dictionary](Documentation/Data_Dictionary_Business_Terms.pdf)**
 
-🎯 Business Problem
+## 🎯 Business Problem
 
 The project was framed around this stakeholder situation:
 
@@ -59,43 +59,41 @@ team can flag at-risk accounts earlier. I need this backed by data,
 not gut feeling — and I want a dashboard my team can check regularly,
 not a one-time report.”
 
-What the stakeholder wanted to know
+### What the stakeholder wanted to know
 
 The analysis was designed to answer:
 
-Which loan and borrower segments have higher observed default
-rates?
+***Which loan and borrower segments have higher observed default
+rates?***
 
-Which districts show higher observed risk?
+2.**Which districts show higher observed risk?**
 
-Do loan amount and loan duration relate to default rate?
+3.**Do loan amount and loan duration relate to default rate?**
 
-Do account characteristics and pre-loan behaviour differ between
-defaulted and non-defaulted loans?
+4.**Do account characteristics and pre-loan behaviour differ between
+defaulted and non-defaulted loans?**
 
-Are newer accounts riskier?
+5.**Are newer accounts riskier?**
 
-Does card ownership show an association with default rate?
+6.**Does card ownership show an association with default rate?**
 
-Do age or gender show a meaningful pattern?
+7.**Do age or gender show a meaningful pattern?**
 
-Has default rate actually increased over time?
+8.**Has default rate actually increased over time?**
 
-🧪 Project Hypothesis
+## 🧪 Project Hypothesis
 
 The stakeholder gave me an initial hypothesis:
 
-“Our NPA (default) rate has risen from 3.2% to 5.8% over 18
-months.”
+**“Our NPA (default) rate has risen from 3.2% to 5.8% over 18
+months.”**
 
-This created an important analytical question:
-
-Does the historical data support the stakeholder’s assumption?
+**This created an important analytical question:** Does the historical data support the stakeholder’s assumption?
 
 Instead of assuming the statement was true, I tested it using the loan
 issue date.
 
-The historical data did not reproduce a sustained increase.
+**The historical data did not reproduce a sustained increase.**
 
 Observed annual default rates were approximately:
 
@@ -128,21 +126,21 @@ Observed Default Rate
 2.53%
 
 The sharp decline in 1998 was treated cautiously because later loans
-have less time to become observed defaults (right-censoring).
+have less time to become observed defaults (**right-censoring**).
 
-What this changed in my analysis
+### What this changed in my analysis
 
-I did not try to force the dashboard to prove that default risk was
+I did **not** try to force the dashboard to prove that default risk was
 increasing.
 
 Instead, I shifted the investigation toward:
 
-Where is observed default risk concentrated, and what
-borrower/account characteristics are associated with it?
+**Where is observed default risk concentrated, and what
+borrower/account characteristics are associated with it?**
 
-That became the central analytical story of the project.
+That became the **central analytical story of the project.**
 
-🗂️ Dataset
+## 🗂️ Dataset
 
 This project uses the Berka Financial Dataset (1993–1998) from the
 CTU Relational Learning Repository.
