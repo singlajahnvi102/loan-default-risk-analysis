@@ -312,6 +312,75 @@ They also ensured that the Power BI calculations were based on the **correct pre
 
 📁 **[Open SQL Views and Analysis](Sql_Files/)**
 
+## 📊 Analytical Segmentation
+
+To make the analysis easier to interpret from a business perspective, I converted several raw numeric or categorical fields into meaningful analytical groups.
+
+### 1. Client Segmentation
+
+Client age was calculated at the time of loan issuance rather than using a fixed current age.
+
+Clients were grouped into:
+
+| Client Age | Group |
+|---|---|
+| 18–33 | Young |
+| 34–49 | Middle |
+| 50+ | Older |
+
+Clients below 18 were treated as outside the valid adult analysis range and were not used for age-based interpretation.
+
+The analysis showed that Young, Middle and Older clients had broadly similar observed default rates.
+
+
+### 2. Loan Amount Segmentation
+
+Loan amounts were divided into three groups:
+
+| Loan Amount | Category |
+|---|---|
+| < 200,000 | Small |
+| 200,000–400,000 | Mid |
+| > 400,000 | Big |
+
+This helped compare default rates across different loan sizes.
+
+The analysis showed that larger loans had higher observed default rates, although the Big Loan group had a relatively small number of loans and therefore requires further validation.
+
+
+### 3. Loan Duration Segmentation
+
+Loan duration was divided into three categories:
+
+| Duration | Category |
+|---|---|
+| Short-term | Short-Term |
+| Medium duration | Medium-Term |
+| Long duration | Long-Term |
+
+The exact boundaries were based on the duration values present in the dataset.
+
+Duration alone did not show a strong difference in observed default rates. However, loan amount combined with duration provided more useful segmentation.
+
+
+### 4. Account Age Segmentation
+
+Account age was calculated based on the time between account opening and loan issuance.
+
+The accounts were grouped into:
+
+| Account Age | Group |
+|---|---|
+| 3–9 months | Newer Accounts |
+| 10–15 months | Medium-Age Accounts |
+| 16–22 months | Older Accounts |
+
+Newer accounts showed higher observed default rates than older accounts.
+
+This suggests that limited account history may be worth investigating as a potential risk indicator.
+
+
+
 
 ## 📊 Power BI Dashboard
 
