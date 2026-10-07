@@ -7,49 +7,46 @@ I therefore used Claude as a simulated client and data expert.
 
 The workflow was:
 
-Stakeholder Problem → Data Understanding → SQL Investigation →
+***Stakeholder Problem → Data Understanding → SQL Investigation →
 Validation → SQL Views → Power BI Model → DAX → Dashboard → Business
-Recommendations
+Recommendations***
 
-🤝 AI-Assisted Project Setup
+## 🤝 AI-Assisted Project Setup
 
-1. Claude as My Client
+###1. Claude as My Client
 
-I first asked Claude to act as a finance-industry stakeholder.
+I first asked **Claude to act as a finance-industry stakeholder**.
 
-Exact prompt I used
+**Exact prompt I used**
 
-“Act as a client from the finance industry . I am a data analyst.
+> “Act as a client from the finance industry . I am a data analyst.
 Bring me one realistic business problem your company is facing that I
 could solve using data analysis. Explain the problem the way a real
 stakeholder would. Then let me ask you questions about it.
-I am thinking about making a project using SQL, Power BI. So, suggest
+>
+> `I am thinking about making a project using SQL, Power BI. So, suggest
 accordingly. Also give me a dataset from the internet (with link to
 it) that can be related to this problem, and I can start working on
 your needs.”
 
-Claude then acted as Rohan, VP of Collections & Risk, and gave me
-the business problem, stakeholder expectations and analytical questions.
+Claude then acted as **Rohan, VP of Collections & Risk**, and gave me
+the **business problem, stakeholder expectations and analytical questions**.
+**[View the Business Problem & Analytical Questions](Documentation/Loan_Default_Analysis_Brief.pdf)**
 
-2. Claude as My Data Expert
+### 2. Claude as My Data Expert
 
-After receiving the business problem, I gave Claude this second prompt:
+After receiving the **business problem**, I gave Claude this second prompt:
 
-“Paste your column names or attach the files.
-You are the data expert from the company. Now explain each column in
+> “Paste your column names or attach the files.
+>
+>You are the data expert from the company. Now explain each column in
 business terms, flag anything unusual. Whatever I need to know before
 I start working.”
 
-This helped me understand the business meaning of the tables and
+This helped me understand the **business meaning of the tables and
 columns, relationships between tables, and potential data-quality
-issues before beginning the analysis.
-
-📄 Supporting documentation: - Business Problem
-Brief -
-Data Dictionary — Business
-Terms -
-Documentation
-Folder
+issues** before beginning the analysis.
+📘 **[View the Data Dictionary](Documentation/Data_Dictionary_Business_Terms.pdf)**
 
 🎯 Business Problem
 
