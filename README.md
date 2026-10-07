@@ -63,7 +63,7 @@ not a one-time report.”
 
 The analysis was designed to answer:
 
-***Which loan and borrower segments have higher observed default
+1.***Which loan and borrower segments have higher observed default
 rates?***
 
 2.**Which districts show higher observed risk?**
